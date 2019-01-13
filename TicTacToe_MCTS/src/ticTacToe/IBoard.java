@@ -10,8 +10,6 @@ public interface IBoard {
 
     IBoard getBoardAfterMove(Move move);
 
-    Sign getWinner();
-
     void drawBoard();
 
 }
