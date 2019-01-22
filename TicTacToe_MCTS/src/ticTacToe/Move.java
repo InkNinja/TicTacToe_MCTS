@@ -11,7 +11,7 @@ public class Move {
     }
 
     public boolean equals(Move move) {
-        if (move.sign == sign && move.field == field) {
+        if (move.sign == sign && move.field.equals(field)) {
             return true;
         } else {
             return false;

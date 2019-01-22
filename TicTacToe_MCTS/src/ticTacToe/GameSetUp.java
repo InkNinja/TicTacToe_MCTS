@@ -9,34 +9,25 @@ public class GameSetUp {
         int winLineSize = 0;
         Scanner sc = new Scanner(System.in);
         while (size == 0) {
-            try {
-                System.out.println("Choose board size (<10)");
-                sc = new Scanner(System.in);
-                int input = sc.nextInt();
-                if ((input > 0) && (input < 10)) {
-                    size = input;
-                }
-            } catch (Exception e) {
+            System.out.println("Choose board size (<10)");
+            int input = sc.nextInt();
+            if ((input > 0) && (input < 10)) {
+                size = input;
             }
         }
         while (winLineSize == 0) {
-            try {
-                System.out.println("Choose win line size (<=" + size + ")");
-                sc = new Scanner(System.in);
-                int input = sc.nextInt();
-                if ((input > 0) && (input <= size)) {
-                    winLineSize = input;
-                }
-            } catch (Exception e) {
+            System.out.println("Choose win line size (<=" + size + ")");
+            int input = sc.nextInt();
+            if ((input > 0) && (input <= size)) {
+                winLineSize = input;
             }
         }
-        TicTacToe ttt = new TicTacToe(size, winLineSize);
-        sc.close();
+        TicTacToe ttt = new TicTacToe(size, winLineSize, sc);
         return ttt;
     }
 
     public static void printEndGame(TicTacToe ttt) {
-        Board board = ttt.getBoard();
+        Board board = ttt.board;
         System.out.println();
         System.out.println("-------------------------");
         System.out.println();
@@ -48,6 +39,7 @@ public class GameSetUp {
         } else {
             System.out.println(ttt.getWinner() + " WINS");
         }
+        ttt.scanner.close();
     }
 
 

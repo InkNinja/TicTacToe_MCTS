@@ -2,11 +2,10 @@ package ticTacToe;
 
 import java.util.ArrayList;
 
-public class Board implements IBoard {
+public class Board {
 
     public Field[][] fields;
     public int size;
-    public Sign currentPlayer;
 
     public Board() {
         this(5);
@@ -17,40 +16,12 @@ public class Board implements IBoard {
         fields = new Field[size][size];
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                fields[x][y] = new Field();
+                fields[x][y] = new Field(x, y);
             }
         }
-        currentPlayer = Sign.CROSS;
     }
 
-
-    @Override
-    public ArrayList<Move> getAllPossibleMoves() {
-        ArrayList<Move> possibleMoves = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (fields[i][j].sign == null) {
-                    possibleMoves.add(new Move(fields[i][j], currentPlayer));
-                }
-            }
-        }
-        return possibleMoves;
-    }
-
-    @Override
-    public IBoard applyMove(Move move) {
-        move.field.setSign(move.sign);
-        currentPlayer = currentPlayer.next();
-        return this;
-    }
-
-    @Override
-    public IBoard getBoardAfterMove(Move move) {
-        Board afterMove = copyBoard();
-        return afterMove.applyMove(move);
-    }
-
-    private Board copyBoard() {
+    public Board copyBoard() {
         Board copy = new Board(size);
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -60,7 +31,6 @@ public class Board implements IBoard {
         return copy;
     }
 
-    @Override
     public void drawBoard() {
 
         System.out.print("\n");
@@ -93,11 +63,16 @@ public class Board implements IBoard {
                 return checkColumn(i, winLineSize);
             }
         }
-        if (checkLdiagonal(winLineSize) != null) {
-            return checkLdiagonal(winLineSize);
-        } else {
-            return checkRdiagonal(winLineSize);
+        for(int i = winLineSize-size; i <= size-winLineSize; i++)
+        {
+            if (checkLdiagonal(i, winLineSize) != null) {
+                return checkLdiagonal(i, winLineSize);
+            }
+            if (checkRdiagonal(i, winLineSize) != null) {
+                return checkRdiagonal(i, winLineSize);
+            }
         }
+        return null;
     }
 
     public Sign checkRow(int y, int winLineSize) {
@@ -116,18 +91,28 @@ public class Board implements IBoard {
         return checkLineForWinner(line, winLineSize);
     }
 
-    public Sign checkLdiagonal(int winLineSize) {
+    public Sign checkLdiagonal(int x, int winLineSize) {
         ArrayList<Field> line = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            line.add(fields[size - 1 - i][i]);
+        int y = size-1;
+        while(y>=0){
+            if(x>=0){
+                line.add(fields[x][y]);
+            }
+            x++;
+            y--;
         }
         return checkLineForWinner(line, winLineSize);
     }
 
-    public Sign checkRdiagonal(int winLineSize) {
+    public Sign checkRdiagonal(int x, int winLineSize) {
         ArrayList<Field> line = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            line.add(fields[i][i]);
+        int y = 0;
+        while(y<size){
+            if(x>=0){
+                line.add(fields[x][y]);
+            }
+            x++;
+            y++;
         }
         return checkLineForWinner(line, winLineSize);
     }
@@ -147,6 +132,28 @@ public class Board implements IBoard {
             }
         }
         return null;
+    }
+
+    public Board applyMove(Move move) {
+        move.field.setSign(move.sign);
+        return this;
+    }
+
+    public ArrayList<Move> getAllPossibleMoves(Sign sign) {
+        ArrayList<Move> possibleMoves = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (fields[i][j].sign == null) {
+                    possibleMoves.add(new Move(fields[i][j], sign));
+                }
+            }
+        }
+        return possibleMoves;
+    }
+
+    public Board getBoardAfterMove(Move move) {
+        Board afterMove = copyBoard();
+        return afterMove.applyMove(move);
     }
 
 }

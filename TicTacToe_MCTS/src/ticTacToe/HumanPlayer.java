@@ -10,9 +10,9 @@ public class HumanPlayer implements Player {
 
     @Override
     public Move getMove(TicTacToe ttt) {
-        Board board = ttt.getBoard();
+        Board board = ttt.board;
         Move move = null;
-        Scanner sc = new Scanner(System.in);
+        Scanner sc = ttt.scanner;
         while (move == null) {
             int x;
             int y;
@@ -21,29 +21,24 @@ public class HumanPlayer implements Player {
             System.out.println();
             board.drawBoard();
             System.out.println();
-            try {
-                System.out.println("X:");
-                sc = new Scanner(System.in);
-                int input = sc.nextInt();
-                if ((input > 0) && (input <= board.size)) {
-                    x = input;
-                } else {
-                    continue;
-                }
-
-                System.out.println("Y:");
-
-                input = sc.nextInt();
-                if ((input > 0) && (input <= board.size)) {
-                    y = input;
-                } else {
-                    continue;
-                }
-                move = new Move(board.fields[x - 1][y - 1], board.currentPlayer);
-            } catch (Exception e) {
+            System.out.println("X:");
+            int input = sc.nextInt();
+            if ((input > 0) && (input <= board.size)) {
+                x = input;
+            } else {
+                continue;
             }
+
+            System.out.println("Y:");
+
+            input = sc.nextInt();
+            if ((input > 0) && (input <= board.size)) {
+                y = input;
+            } else {
+                continue;
+            }
+            move = new Move(board.fields[x - 1][y - 1], ttt.currentSign);
         }
-        sc.close();
         return move;
     }
 
@@ -54,6 +49,16 @@ public class HumanPlayer implements Player {
 
     public void setOpponent(Player player) {
         opponent = player;
+    }
+
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        while(true){
+            System.out.println("Enter:");
+            int x = sc.nextInt();
+            System.out.println(x);
+
+        }
     }
 
 }
